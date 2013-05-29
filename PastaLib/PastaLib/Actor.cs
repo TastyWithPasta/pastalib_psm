@@ -1,29 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
+using PastaGameLibrary.Components;
+using PastaLib.Components;
 
-namespace PastaGameLibrary
+namespace PastaLib
 {
-    public class Actor : IPActor, IDisposable
+    public class Actor : IDisposable
     {
 		static uint currentID = 0;
 		uint _ID = 0;
 
 		MyGame m_theGame;
 		IPActor m_parent = null;
+		
+		//Mandatory components, there can be only one of them
+		PTransformComponent m_transform = new PTransformComponent();
+		PShaderComponent m_shader = null;
+		
+		//The actor can have multiple updatable components, but only one drawable.
+		//The drawable can also be an updatable
+		IPDrawableComponent m_currentDrawable;
+		List<IPUpdatableComponent> m_currentUpdatables;
 		List<IPActor> m_children = new List<IPActor>();
-
-		List<IPComponent> m_allComponents = new List<IPComponent>();
-		List<IPUpdatable> m_updatableComponents = new List<IPUpdatable>();
-		List<IPDrawable> m_drawableComponents = new List<IPDrawable>();
-
+	
         public Actor(MyGame theGame) 
         {
 			m_theGame = theGame;
@@ -54,6 +54,15 @@ namespace PastaGameLibrary
 		public MyGame TheGame
 		{
 			get { return m_theGame; }
+		}
+		public TransformComponent Transform
+		{
+			get{ return m_transform; }
+		}
+		public PShaderComponent Shader
+		{
+			get{ return m_shader; }
+			set{ m_shader = value; }
 		}
 
 		public bool BindParent(IPActor parent)
@@ -104,10 +113,31 @@ namespace PastaGameLibrary
 
 		public void AddComponent(IPComponent component)
 		{
-			if (component is IPUpdatable)
-				m_updatableComponents.Add((IPUpdatable)component);
-			if (component is IPDrawable)
-				m_drawableComponents.Add((IPDrawable)component);
+			//Replaces current shader (not part of other updatables, needs to be updated at the end)
+			if(component is PShaderComponent)
+			{
+				m_shader = (PShaderComponent)component;
+				return;
+			}
+			
+			//Adds component to current updatables
+			if (component is IPUpdatableComponent)
+				m_currentUpdatables.Add((IPUpdatableComponent)component);
+			
+			//Component replaces current drawable
+			if (component is IPDrawableComponent)
+			{
+				if(m_drawable == null)
+				{
+					m_drawable = (IPDrawableComponent)component;	
+				}
+				else
+				{
+					if(m_drawable is IPUpdatableComponent)
+						m_currentUpdatables.Remove(m_drawable);
+					   
+				}
+			}
 			m_allComponents.Add(component);
 			component.Attach(this);
 		}
@@ -118,7 +148,7 @@ namespace PastaGameLibrary
 		/// </summary>
 		/// <typeparam name="ComponentType">Type of components to return.</typeparam>
 		/// <returns>List of components matching the specified type.</returns>
-		public List<ComponentType> GetComponents<ComponentType>() where ComponentType : PComponent
+		public List<ComponentType> GetComponents<ComponentType>() where ComponentType : PUpdatableComponent
 		{
 			List<ComponentType> result = new List<ComponentType>();
 			for (int i = 0; i < m_allComponents.Count; ++i)
@@ -126,7 +156,7 @@ namespace PastaGameLibrary
 					result.Add((ComponentType)m_allComponents[i]);
 			return result;
 		}
-		public ComponentType GetFirstComponent<ComponentType>() where ComponentType : PComponent
+		public ComponentType GetFirstComponent<ComponentType>() where ComponentType : PUpdatableComponent
 		{
 			List<ComponentType> result = GetComponents<ComponentType>();
 			if (result.Count == 0)
@@ -137,13 +167,17 @@ namespace PastaGameLibrary
 		//Two distinct types of methods since drawing and updating are handled separately by XNA.
 		public void Update()
 		{
-			for (int i = 0; i < m_updatableComponents.Count; ++i)
-				m_updatableComponents[i].Update();
+			for (int i = 0; i < m_currentUpdatables.Count; ++i)
+				m_currentUpdatables[i].Update();
+			
+			m_shader.Update();//Update shader values last
 		}
 		public void Draw()
 		{
-			for (int i = 0; i < m_drawableComponents.Count; ++i)
-				m_drawableComponents[i].Draw();
+			if(m_currentDrawable == null)
+				return;
+			
+			m_drawable.Draw();
 		}
 	}
 }

@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PastaGameLibrary.Utilities;
 
-namespace PastaGameLibrary.Components
+namespace PastaLib.Components
 {
 	public class PSpriteComponent : PComponent, IPDrawable, IPUpdatable
 	{
@@ -21,7 +20,6 @@ namespace PastaGameLibrary.Components
 		private float m_depth = 1.0f;
 		private float m_scaleX = 1, m_scaleY = 1; //Scaling of the destination rectangle
 		private float m_width = 0, m_height = 0; //Base width of the destination rectangle
-		private PTransformComponent m_transformComponent = null;
 
 		private Animation m_animation = null;
 		private int m_amountOfFrames = 0;
@@ -189,24 +187,26 @@ namespace PastaGameLibrary.Components
 		}
 		protected override void OnAttach(IPActor container)
 		{
-			m_transformComponent = Container.GetFirstComponent<PTransformComponent>();
+			//m_transformComponent = Container.GetFirstComponent<PTransformComponent>();
 		}
-		public void Update()
+		
+		protected override void OnUpdate()
 		{
 			if (m_animation == null)
 				return;
 			SetFrame((int)m_animation.GetCurrentFrame());
 		}
-		public void Draw()
+		
+		protected override void OnDraw()
 		{
-			if (m_transformComponent == null || m_texture == null)
+			if (Container.Transform == null || Container.Shader == null || m_texture == null)
 				return;
 			
 			GraphicsContext context = Container.TheGame.Graphics;
-			VertexBuffer vb = Container.TheGame.UnitVB;
+			VertexBuffer vb = Container.TheGame.UnitVB; //Need to find another place to store that vb.
 			
 			context.SetBlendFunc(BlendFuncMode.Add, BlendFuncFactor.SrcAlpha, BlendFuncFactor.OneMinusSrcAlpha);
-			context.SetShaderProgram(shader);
+			context.SetShaderProgram(Container.Shader.ShaderProgram);
 			context.SetVertexBuffer(0, vb);
 			context.SetTexture(0, texture);
 			context.DrawArrays(DrawMode.TriangleFan, 0, 4);

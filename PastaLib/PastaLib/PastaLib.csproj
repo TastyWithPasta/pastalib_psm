@@ -52,11 +52,11 @@
     <Compile Include="TextureLibrary.cs" />
     <Compile Include="Timer.cs" />
     <Compile Include="Shaders.cs" />
-    <Compile Include="Components\PComponent.cs" />
     <Compile Include="Components\PParticleSystemComponent.cs" />
     <Compile Include="Components\PSpriteComponent.cs" />
-    <Compile Include="Components\PTextSpriteComponent.cs" />
     <Compile Include="Components\PTransformComponent.cs" />
     <Compile Include="SoundLibrary.cs" />
+    <Compile Include="Components\PShaderComponent.cs" />
+    <Compile Include="Components\PUpdatableComponent.cs" />
   </ItemGroup>
 </Project>

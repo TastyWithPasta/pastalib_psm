@@ -3,24 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PastaGameLibrary
+namespace PastaLib
 {
+	/*
 	public interface IPComponent
 	{
 		bool Enabled { get; set; }
 		IPActor Container { get; }
-		void Initialise();
-
 		void Attach(IPActor container);
 	}
-	public interface IPUpdatable
-	{
-		void Update();
-	}
-	public interface IPDrawable
-	{
-		void Draw();
-	}
+	
+	
 	public interface IPActor
 	{
 		int ID { get; }
@@ -38,4 +31,51 @@ namespace PastaGameLibrary
 		List<ComponentType> GetComponents<ComponentType>() where ComponentType : PComponent;
 		ComponentType GetFirstComponent<ComponentType>() where ComponentType : PComponent;
 	}
+	*/
+	
+	public abstract class PComponent
+	{
+		bool m_enabled;
+		IPActor m_container;
+
+		public IPActor Container
+		{
+			get { return m_container; }
+		}
+		public bool Enabled
+		{
+			get { return m_enabled;	}
+			set
+			{
+				m_enabled = value;
+				if (m_enabled)
+					OnEnable();
+				else
+					OnDisable();
+			}
+		}
+
+		protected virtual void OnParentChanged(){}
+		protected virtual void OnEnable(){}
+		protected virtual void OnDisable(){}
+
+		public void Attach(IPActor container)
+		{
+			m_container = container;
+			OnAttach(container);
+		}
+		protected void OnAttach(IPActor container){}
+
+	}
+
+	public interface IPUpdatable
+	{
+		void Update();
+	}
+	public interface IPDrawable
+	{
+		void Draw();
+	}
+
+
 }

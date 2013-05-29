@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Sce.PlayStation.Core;
 
-namespace PastaGameLibrary.Components
+namespace PastaLib.Components
 {
-	public class PTransformComponent : PComponent
+	public class PTransformComponent : IPComponent
 	{
 		Vector2 m_position = Vector2.Zero;
 		Vector2 m_scale = Vector2.One;
@@ -32,9 +32,7 @@ namespace PastaGameLibrary.Components
 		protected override void OnEnable()
 		{}
 		protected override void OnDisable()
-		{
-			
-		}
+		{}
 		
 		public Matrix4 TransformMatrixRelative
 		{
