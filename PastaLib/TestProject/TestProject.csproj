@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1FB78717-07B0-4854-8AEB-F100E6FDB358}</ProjectGuid>
+    <ProjectGuid>{951B12F5-F583-4387-92F7-EFAAD69471DD}</ProjectGuid>
     <ProjectTypeGuids>{69878862-DA7D-4DC6-B0A1-50D8FAB4242F};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <OutputType>Library</OutputType>
-    <RootNamespace>PastaLib</RootNamespace>
-    <AssemblyName>PastaLib</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>TestProject</RootNamespace>
+    <AssemblyName>TestProject</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,28 +35,15 @@
     <Reference Include="System.Core" />
     <Reference Include="Sce.PlayStation.Core" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Sce\Sce.Psm.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="ActiveList.cs" />
-    <Compile Include="Actor.cs" />
-    <Compile Include="Button.cs" />
-    <Compile Include="EquationSolver.cs" />
-    <Compile Include="Interfaces.cs" />
-    <Compile Include="MyGame.cs" />
-    <Compile Include="ParticleGenerator.cs" />
-    <Compile Include="ParticleSystem.cs" />
-    <Compile Include="Sprite.cs" />
-    <Compile Include="SpriteDrawingList.cs" />
-    <Compile Include="SpritefontManager.cs" />
-    <Compile Include="SwitchButton.cs" />
-    <Compile Include="TextureLibrary.cs" />
-    <Compile Include="Timer.cs" />
-    <Compile Include="Shaders.cs" />
-    <Compile Include="Components\PComponent.cs" />
-    <Compile Include="Components\PParticleSystemComponent.cs" />
-    <Compile Include="Components\PSpriteComponent.cs" />
-    <Compile Include="Components\PTextSpriteComponent.cs" />
-    <Compile Include="Components\PTransformComponent.cs" />
-    <Compile Include="SoundLibrary.cs" />
+    <Compile Include="AppMain.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ShaderProgram Include="shaders\Simple.fcg" />
+    <ShaderProgram Include="shaders\Simple.vcg" />
+  </ItemGroup>
+  <ItemGroup>
+    <PsmMetadata Include="app.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Sce\Sce.Psm.CSharp.targets" />
 </Project>

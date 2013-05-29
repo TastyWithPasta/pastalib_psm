@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PastaLib", "PastaLib\PastaLib.csproj", "{1FB78717-07B0-4854-8AEB-F100E6FDB358}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{951B12F5-F583-4387-92F7-EFAAD69471DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{1FB78717-07B0-4854-8AEB-F100E6FDB358}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FB78717-07B0-4854-8AEB-F100E6FDB358}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1FB78717-07B0-4854-8AEB-F100E6FDB358}.Release|Any CPU.Build.0 = Release|Any CPU
+		{951B12F5-F583-4387-92F7-EFAAD69471DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{951B12F5-F583-4387-92F7-EFAAD69471DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{951B12F5-F583-4387-92F7-EFAAD69471DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{951B12F5-F583-4387-92F7-EFAAD69471DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = PastaLib\PastaLib.csproj
