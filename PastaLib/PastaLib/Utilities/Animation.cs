@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PastaGameLibrary.Utilities
+namespace PastaLib.Utilities
 {
 	public class Animation
 	{

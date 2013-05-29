@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Timers;
 
-namespace PastaGameLibrary
+namespace PastaLib.Utilities
 {
 	public interface IPInterpolation<T>
 	{
