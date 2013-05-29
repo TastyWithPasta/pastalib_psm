@@ -28,7 +28,7 @@ namespace PastaLib.Components
 		protected abstract void OnUpdate();
 	}
 	
-	public abstract class PDrawableComponent : IPUpdatable, IPDrawable
+	public abstract class PDrawableComponent : PComponent, IPUpdatable, IPDrawable
 	{
 		ShaderProgram m_shaderProgram;
 		

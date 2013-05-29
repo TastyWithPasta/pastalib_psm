@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using PastaGameLibrary.Components;
 using PastaLib.Components;
 
 namespace PastaLib
@@ -12,17 +11,18 @@ namespace PastaLib
 		uint _ID = 0;
 
 		MyGame m_theGame;
-		IPActor m_parent = null;
+		Actor m_parent = null;
 		
 		//Mandatory components, there can be only one of them
 		PTransformComponent m_transform = new PTransformComponent();
 		PShaderComponent m_shader = null;
+		PComponent m_controller = null;
 		
 		//The actor can have multiple updatable components, but only one drawable.
 		//The drawable can also be an updatable
-		IPDrawableComponent m_currentDrawable;
-		List<IPUpdatableComponent> m_currentUpdatables;
-		List<IPActor> m_children = new List<IPActor>();
+		PDrawableComponent m_currentDrawable;
+		List<PUpdatableComponent> m_currentUpdatables;
+		List<Actor> m_children = new List<Actor>();
 	
         public Actor(MyGame theGame) 
         {
@@ -43,11 +43,11 @@ namespace PastaLib
 		{
 			get { return ID; }
 		}
-		public IPActor Parent
+		public Actor Parent
 		{
 			get { return m_parent; }
 		}
-		public List<IPActor> Children
+		public List<Actor> Children
 		{
 			get { return m_children; }
 		}
@@ -55,7 +55,7 @@ namespace PastaLib
 		{
 			get { return m_theGame; }
 		}
-		public TransformComponent Transform
+		public PTransformComponent Transform
 		{
 			get{ return m_transform; }
 		}
@@ -65,7 +65,7 @@ namespace PastaLib
 			set{ m_shader = value; }
 		}
 
-		public bool BindParent(IPActor parent)
+		public bool BindParent(Actor parent)
 		{
 			if (m_parent == null)
 				return false;
@@ -75,7 +75,7 @@ namespace PastaLib
 			m_parent.BindChild(this);
 			return true;
 		}
-		public bool BindChild(IPActor child)
+		public bool BindChild(Actor child)
 		{
 			if (child == null)
 				return false;
@@ -90,11 +90,11 @@ namespace PastaLib
 		{
 			if (m_parent == null)
 				return;
-			IPActor temp = m_parent;
+			Actor temp = m_parent;
 			m_parent = null;
 			temp.UnbindChild(this);
 		}
-		public void UnbindChild(IPActor child)
+		public void UnbindChild(Actor child)
 		{
 			if (!m_children.Contains(child))
 			{
@@ -111,34 +111,23 @@ namespace PastaLib
 			}
 		}
 
-		public void AddComponent(IPComponent component)
+		public void AddComponent(PComponent component)
 		{
 			//Replaces current shader (not part of other updatables, needs to be updated at the end)
 			if(component is PShaderComponent)
 			{
 				m_shader = (PShaderComponent)component;
-				return;
 			}
-			
-			//Adds component to current updatables
-			if (component is IPUpdatableComponent)
-				m_currentUpdatables.Add((IPUpdatableComponent)component);
-			
-			//Component replaces current drawable
-			if (component is IPDrawableComponent)
+			else
 			{
-				if(m_drawable == null)
-				{
-					m_drawable = (IPDrawableComponent)component;	
-				}
-				else
-				{
-					if(m_drawable is IPUpdatableComponent)
-						m_currentUpdatables.Remove(m_drawable);
-					   
-				}
+				if (component is PDrawableComponent)
+				m_currentDrawable = (PDrawableComponent)component;
+			
+				//Adds component to current updatables
+				if (component is PUpdatableComponent)
+					m_currentUpdatables.Add((PUpdatableComponent)component);
 			}
-			m_allComponents.Add(component);
+			
 			component.Attach(this);
 		}
 
@@ -151,9 +140,11 @@ namespace PastaLib
 		public List<ComponentType> GetComponents<ComponentType>() where ComponentType : PUpdatableComponent
 		{
 			List<ComponentType> result = new List<ComponentType>();
+			/*
 			for (int i = 0; i < m_allComponents.Count; ++i)
 				if (m_allComponents[i].GetType().IsAssignableFrom(typeof(ComponentType)))
 					result.Add((ComponentType)m_allComponents[i]);
+					*/
 			return result;
 		}
 		public ComponentType GetFirstComponent<ComponentType>() where ComponentType : PUpdatableComponent
@@ -170,6 +161,7 @@ namespace PastaLib
 			for (int i = 0; i < m_currentUpdatables.Count; ++i)
 				m_currentUpdatables[i].Update();
 			
+			m_currentDrawable.Update();
 			m_shader.Update();//Update shader values last
 		}
 		public void Draw()
@@ -177,7 +169,7 @@ namespace PastaLib
 			if(m_currentDrawable == null)
 				return;
 			
-			m_drawable.Draw();
+			m_currentDrawable.Draw();
 		}
 	}
 }

@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using Sce.PlayStation.Core;
+using Sce.PlayStation.Core.Graphics;
+using PastaLib.Utilities;
 
 namespace PastaLib.Components
 {
-	public class PSpriteComponent : PComponent, IPDrawable, IPUpdatable
+	public class PSpriteComponent : PDrawableComponent
 	{
-		private Rectangle m_srcRect = Rectangle.Empty;
-		private Rectangle m_destRect = Rectangle.Empty;
+		private Rectangle m_srcRect = new Rectangle(0,0,0,0);
+		private Rectangle m_destRect = new Rectangle(0,0,0,0);
 		
 		private Texture2D m_texture = null;
 		private Vector2 m_origin = new Vector2(0.5f, 0.5f);
 		private Vector2 m_renderOrigin = new Vector2(0.5f, 0.5f);
-		private Color m_colour = Color.White;
-		private Color m_renderColour = Color.White;
+		private Vector4 m_colour = Vector4.One;
 		private float m_depth = 1.0f;
 		private float m_scaleX = 1, m_scaleY = 1; //Scaling of the destination rectangle
 		private float m_width = 0, m_height = 0; //Base width of the destination rectangle
@@ -58,8 +58,8 @@ namespace PastaLib.Components
 				}
 				else
 				{
-					m_frameRows = m_texture.Height / m_srcRect.Height;
-					m_frameColumns = m_texture.Width / m_srcRect.Width;
+					m_frameRows = m_texture.Height / (int)m_srcRect.Height;
+					m_frameColumns = m_texture.Width / (int)m_srcRect.Width;
 					m_amountOfFrames = m_frameRows * m_frameColumns;
 					if(m_amountOfFrames == 1)
 					{
@@ -74,15 +74,11 @@ namespace PastaLib.Components
 			get { return m_animation; }
 			set { m_animation = value; }
 		}
-		public Color Colour
+		public Vector4 Colour
 		{
 			get { return m_colour; }
 			set { 
 				m_colour = value;
-				m_renderColour.R = (byte)(m_colour.R * m_colour.A);
-				m_renderColour.G = (byte)(m_colour.G * m_colour.A);
-				m_renderColour.B = (byte)(m_colour.B * m_colour.A);
-				m_renderColour.A = m_colour.A;
 			}
 		}
 		public float Depth
@@ -101,7 +97,7 @@ namespace PastaLib.Components
 		}
 		public float Rotation
 		{
-			get { return (float)m_transformComponent.Direction; }
+			get { return (float)Container.Transform.Direction; }
 		}
 
 		public float Width
@@ -153,7 +149,7 @@ namespace PastaLib.Components
 		{
 			get
 			{
-				Vector2 pos = m_transformComponent.Position;
+				Vector3 pos = Container.Transform.Position;
 				m_destRect.X = (int)pos.X;
 				m_destRect.Y = (int)pos.Y;
 				return m_destRect;
@@ -175,20 +171,6 @@ namespace PastaLib.Components
 			m_srcRect.X = frame % m_frameColumns * m_srcRect.Width;
 			m_srcRect.Y = frame / m_frameColumns * m_srcRect.Height;
 		}
-
-		protected override void OnParentChanged()
-		{
-		}
-		protected override void OnEnable()
-		{
-		}
-		protected override void OnDisable()
-		{
-		}
-		protected override void OnAttach(IPActor container)
-		{
-			//m_transformComponent = Container.GetFirstComponent<PTransformComponent>();
-		}
 		
 		protected override void OnUpdate()
 		{
@@ -208,10 +190,8 @@ namespace PastaLib.Components
 			context.SetBlendFunc(BlendFuncMode.Add, BlendFuncFactor.SrcAlpha, BlendFuncFactor.OneMinusSrcAlpha);
 			context.SetShaderProgram(Container.Shader.ShaderProgram);
 			context.SetVertexBuffer(0, vb);
-			context.SetTexture(0, texture);
+			context.SetTexture(0, m_texture);
 			context.DrawArrays(DrawMode.TriangleFan, 0, 4);
-			
-			Container.TheGame.SpriteBatch.Draw(m_texture, DestinationRectangle, SourceRectangle, Colour, Rotation, m_renderOrigin, SpriteEffects.None, 0);
 		}
 	}
 }

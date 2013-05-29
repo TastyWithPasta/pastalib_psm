@@ -3,56 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework;
+using Sce.PlayStation.Core.Graphics;
+using Sce.PlayStation.Core;
+
 
 namespace PastaGameLibrary
 {
-	public interface ContentLoader<T>
-	{
-		void LoadContent(ContentManager contentManager, string path);
-		void UnloadContent();
-		T Get(string name);
-	}
-
-    public class TextureLibrary : ContentLoader<Texture2D>
+    public static class TextureLibrary
     {
-		private Dictionary<string, Texture2D> m_textureLibrary = new Dictionary<string, Texture2D>();
-		//private string m_basePath = "Content/";
+		private static Dictionary<string,Texture2D> _textures=new Dictionary<string,Texture2D>();
+		private static Dictionary<string, Rgba[]> _colourData=new Dictionary<string, Rgba[]>();
 
-		public void LoadContent(ContentManager Content, string path)
-		{
-			string fullpath;
-			if (path == "")
-			{
-				fullpath = Content.RootDirectory;
-			}
-			else
-			{
-				fullpath = Content.RootDirectory + "/" + path;
-				path += "/";
-			}
-
-			DirectoryInfo di = new DirectoryInfo(fullpath);
-			FileInfo[] files = di.GetFiles();
-			int length = files.Length;
-
-			for (int i = 0; i < length; ++i)
-			{
-				string name = files[i].Name.Substring(0, files[i].Name.Length - 4);
-				m_textureLibrary.Add(name, Content.Load<Texture2D>(path + name));
+		public static void Load(string dir){
+			dir = "/Application/" + dir;
+			foreach (string f in Directory.GetFiles(dir)) {
+				string index=Path.GetFileNameWithoutExtension(f).ToLower();
+				_textures.Add(index, new Texture2D(f, false));
+				/*Image i=new Image(f);
+				i.Decode();
+				byte[] b=i.ToBuffer();
+				_colourData.Add(index, new Rgba[b.Length/4]);
+				for (int n=0; n<b.Length; n+=4)
+					_colourData[index][n/4]=new Rgba(b[n], b[n+1], b[n+2], b[n+3]);*/
 			}
 		}
-
-		public void UnloadContent()
-		{
-			m_textureLibrary.Clear();
+		
+		public static void Add(string name, Texture2D texture){
+			_textures[name.ToLower()]=texture;
 		}
-
-		public Texture2D Get(string name)
-		{
-			return m_textureLibrary[name];
-		}
-    }
+		
+		public static Texture2D Get(string name){
+			return _textures[name.ToLower()];
+    	}
+	}
 }

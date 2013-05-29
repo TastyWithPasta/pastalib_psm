@@ -36,9 +36,9 @@ namespace PastaLib
 	public abstract class PComponent
 	{
 		bool m_enabled;
-		IPActor m_container;
+		Actor m_container;
 
-		public IPActor Container
+		public Actor Container
 		{
 			get { return m_container; }
 		}
@@ -59,12 +59,12 @@ namespace PastaLib
 		protected virtual void OnEnable(){}
 		protected virtual void OnDisable(){}
 
-		public void Attach(IPActor container)
+		public void Attach(Actor container)
 		{
 			m_container = container;
 			OnAttach(container);
 		}
-		protected void OnAttach(IPActor container){}
+		protected virtual void OnAttach(Actor container){}
 
 	}
 

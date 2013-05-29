@@ -2,40 +2,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
-namespace PastaLibrary
+namespace PastaLib.Components
 {
-    public interface IParticle
+    public interface IParticle  
     {
         bool RemoveMe();
         //void AssignFastTexture(Texture2D particleTexture);
-        void Update(GameTime gameTime);
-        void Draw(SpriteBatch spriteBatch);
+        void Update(float elapsedTime);
+        void Draw(float elapsedTime);
     }
 
-    public class ParticleGenerator<T> : Entity
+    public class ParticleGenerator<T> : PDrawableComponent
         where T : IParticle
     {
         int _size;
-        bool _visible = true;
         bool _automatic = false;
-        int _generationInterval = 100;
-        int _generationTimer;
+        float _generationInterval = 100;
+        float _generationTimer;
         IParticle[] _particles;
 
-        public bool Visible
-        {
-            get { return _visible; }
-            set { _visible = value; }
-        }
         public bool Automatic
         {
             get { return _automatic; }
             set { _automatic = value; }
         }
-        public int GenerationInterval
+        public float GenerationInterval
         {
             get { return _generationInterval; }
             set { _generationInterval = value; }
@@ -96,34 +88,36 @@ namespace PastaLibrary
                     break;
                 }
         }
-        public void Update(GameTime gameTime)
+
+		protected override void OnUpdate()
         {
+			float elapsed = (float)Container.TheGame.ElapsedTime.TotalMilliseconds;
             if (_automatic)
             {
-                _generationTimer -= (int)gameTime.ElapsedGameTime.TotalMilliseconds;
+                _generationTimer -= elapsed;
                 while (_generationTimer <= 0)
                 {
                     _generationTimer = _generationInterval + _generationTimer;
                     Generate();
                 }
             }
-
+			 
             for (int i = 0; i < _particles.Length; ++i)
             {
                 if (_particles[i] != null)
                 {
-                    _particles[i].Update(gameTime);
+                    _particles[i].Update(elapsed);
                     if (_particles[i].RemoveMe())
                         _particles[i] = null;
                 }
             }
         }
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            if (_visible)
-                for (int i = 0; i < _particles.Length; ++i)
+		protected override void OnDraw ()
+		{
+			float elapsed = (float)Container.TheGame.ElapsedTime.TotalMilliseconds;
+			for (int i = 0; i < _particles.Length; ++i)
                     if (_particles[i] != null)
-                        _particles[i].Draw(spriteBatch);
-        }
+                        _particles[i].Draw(elapsed);
+		}
     }
 }

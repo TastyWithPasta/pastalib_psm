@@ -1,8 +1,9 @@
 using System;
+using Sce.PlayStation.Core.Graphics;
 
 namespace PastaLib.Components
 {
-	public class PShaderComponent : IPComponent
+	public abstract class PShaderComponent : PUpdatableComponent
 	{
 		ShaderProgram m_shaderProgram;
 		
@@ -16,7 +17,7 @@ namespace PastaLib.Components
 			get{ return m_shaderProgram; }
 		}
 
-		public void Update ()
+		protected override void OnUpdate ()
 		{
 			if(!Enabled)
 				return;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PastaGameLibrary
+namespace PastaLib
 {
 	public delegate void VoidDelegate();
 	public class ActiveList

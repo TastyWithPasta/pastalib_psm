@@ -39,16 +39,10 @@
   <ItemGroup>
     <Compile Include="ActiveList.cs" />
     <Compile Include="Actor.cs" />
-    <Compile Include="Button.cs" />
     <Compile Include="EquationSolver.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="MyGame.cs" />
     <Compile Include="ParticleGenerator.cs" />
-    <Compile Include="ParticleSystem.cs" />
-    <Compile Include="Sprite.cs" />
-    <Compile Include="SpriteDrawingList.cs" />
-    <Compile Include="SpritefontManager.cs" />
-    <Compile Include="SwitchButton.cs" />
     <Compile Include="TextureLibrary.cs" />
     <Compile Include="Timer.cs" />
     <Compile Include="Shaders.cs" />
@@ -58,5 +52,9 @@
     <Compile Include="SoundLibrary.cs" />
     <Compile Include="Components\PShaderComponent.cs" />
     <Compile Include="Components\PUpdatableComponent.cs" />
+    <Compile Include="Components\PCollisionComponent.cs" />
+    <Compile Include="Utilities\Animation.cs" />
+    <Compile Include="Utilities\Interpolation.cs" />
+    <Compile Include="Components\PControllerComponent.cs" />
   </ItemGroup>
 </Project>

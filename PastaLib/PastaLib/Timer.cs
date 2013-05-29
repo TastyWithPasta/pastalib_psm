@@ -6,7 +6,7 @@ using Sce.PlayStation.Core;
 using Sce.PlayStation.Core.Graphics;
 using Sce.PlayStation.Core.Environment;
 
-namespace PastaGameLibrary
+namespace PastaLib
 {
 	public class PTimerManager : IPUpdatable
 	{
@@ -20,11 +20,11 @@ namespace PastaGameLibrary
 
 		internal void AddTimer(PTimer timer)
 		{
-			timers.Add(timer);
+			m_timers.Add(timer);
 		}
 		internal void RemoveTimer(PTimer timer)
 		{
-			timers.Remove(timer);
+			m_timers.Remove(timer);
 		}
 		public void Update()
 		{

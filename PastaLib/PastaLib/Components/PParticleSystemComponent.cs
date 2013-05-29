@@ -3,36 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PastaGameLibrary.Components
+namespace PastaLib.Components
 {
-	public class PParticleSystemComponent : PComponent
+	public class PParticleSystemComponent : PDrawableComponent
 	{
 		public void Generate(int amount)
 		{
 			throw new NotImplementedException();
 		}
-
-		protected override void OnEnable()
-		{}
-		protected override void OnDisable()
-		{}
-		protected override void OnAttach(IPActor container)
-		{
-			throw new NotImplementedException();
-		}
-		protected override void OnParentChanged()
-		{
-		}
-
 		public void Clear()
 		{
 			throw new NotImplementedException();
 		}
-		public void Update()
+		protected override void OnUpdate()
 		{
 			throw new NotImplementedException();
 		}
-		public void Draw()
+		protected override void OnDraw()
 		{
 			throw new NotImplementedException();
 		}
